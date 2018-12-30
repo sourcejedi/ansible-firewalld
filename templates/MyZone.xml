@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<zone>
+<zone><!-- default is target="%%REJECT%%" -->
   <short>My Zone</short>
   <description>This firewalld installation is managed by a scripted process. Manual changes will be destroyed if the script is re-applied.</description>
 
