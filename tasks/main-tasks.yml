@@ -1,0 +1,42 @@
+# Lets create the configuration first...
+# avoid locking ourself out.
+
+- name: Create firewalld config directories
+  file:
+    dest: "{{ item }}"
+    state: directory
+    mode: "750"
+  with_items:
+    - /etc/firewalld
+    - /etc/firewalld/zones
+  notify: firewalld__reload
+
+- name: Create MyZone.xml
+  template:
+    src: MyZone.xml
+    dest: /etc/firewalld/zones/MyZone.xml
+  notify: firewalld__reload
+
+- name: Create firewalld.conf
+  template:
+    src: firewalld.conf
+    dest: /etc/firewalld/firewalld.conf
+  notify: firewalld__reload
+
+- name: Install firewalld
+  package:
+    name: firewalld
+    state: present
+
+- name: Enable firewalld
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+# In case this fails, we want to know NOW.
+# Don't wait for the tasks from X other roles in the same play.
+# (It doesn't warn on missing or invalid zone files though.
+#  Maybe we could add a task to ensure/check the default zone)
+- name: Flush handlers (firewalld reload)
+  meta: flush_handlers

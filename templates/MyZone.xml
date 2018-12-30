@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zone>
+  <short>My Zone</short>
+  <description>This firewalld installation is managed by a scripted process. Manual changes will be destroyed if the script is re-applied.</description>
+
+{% for service in firewalld__services %}
+  <service name="{{ service }}"/>
+{% endfor %}
+
+</zone>
