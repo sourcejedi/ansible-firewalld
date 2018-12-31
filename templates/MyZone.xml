@@ -7,4 +7,8 @@
   <service name="{{ service }}"/>
 {% endfor %}
 
+{% for port in firewalld__ports %}
+  <port protocol="{{ port.protocol }}" port="{{ port.port }}"/>
+{% endfor %}
+
 </zone>
