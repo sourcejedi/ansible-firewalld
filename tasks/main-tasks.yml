@@ -23,6 +23,21 @@
     dest: /etc/firewalld/firewalld.conf
   notify: firewalld__reload
 
+- name: Install ebtables
+  package:
+    name: ebtables
+    state: present
+
+# firewalld.service is marked as conflicting with ebtables.service.
+# This appears to work automatically - at least under systemd :-).
+# However I find it confusing, since Debian nevertheless enables
+# ebtables.service.
+- name: Disable ebtables service
+  service:
+    name: ebtables
+    state: stopped
+    enabled: no
+
 - name: Install firewalld
   package:
     name: firewalld
