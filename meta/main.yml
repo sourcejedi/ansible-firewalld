@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: firewalld
   author: Alan Jenkins
   description: Minimalist firewall role.  Supports change over time.
                (When you remove a port from your config, it is blocked again).
