@@ -47,6 +47,19 @@ python3 on Fedora 28 and above.
           - protocol: tcp
             port: 3142
 
+To see the list of `firewalld` "services", look in
+`/usr/lib/firewalld/services/`.
+
+Note that if there is a "helper" with the same name as an enabled
+"service", `firewalld` will automatically enable the "helper".
+These are the conntrack modules *which parse the relevant protocol
+inside the kernel*.  This is not desirable for a security feature.
+The "helpers" are defined in `/usr/lib/firewalld/helpers/`.
+
+You could also browse these files in the upstream source tree:
+
+https://github.com/firewalld/firewalld/tree/master/config/
+
 
 ## License
 
