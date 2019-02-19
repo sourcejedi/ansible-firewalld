@@ -10,6 +10,8 @@ The config is created before `firewalld` is started.  Usually this does
 not matter, because the default zone allows ssh / port 22.  It might be
 useful in case you use a different ssh port.
 
+For the full set of disclaimers, please read this entire document :-).
+
 `firewalld` is said to cost 20MB of RAM.  This is for understandable
 reasons, but it is not strictly necessary.
 
@@ -31,6 +33,20 @@ module).  This means that you do not need to force Ansible to use
 python3 on Fedora 28 and above.
 
 (You should probably start using python3 anyway though :-).
+
+`firewalld` recommends that it be used with NetworkManager.  I do not
+guarantee it will work correctly for you without NetworkManager.
+I use this role [without NetworkManager, on Debian][1].  As far as I
+can tell, the features I rely on *should* work.  However the
+documentation is confusing, `firewalld` code assumes RedHat-specific
+details, and some `firewall-cmd` queries will show confusing results.
+
+[1] https://unix.stackexchange.com/questions/497697/firewall-cmd-says-no-firewall-zones-are-active-why
+
+It also seems to be missing some error-checking.  Which is not
+specific to Debian or running without NetworkManager.  Seems
+unfortunate to write so much infrastructure and not make it
+fail-fast.
 
 
 ## Example playbook
