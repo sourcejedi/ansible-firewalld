@@ -51,8 +51,12 @@
 - name: Enable firewalld
   service:
     name: firewalld
-    state: started
     enabled: yes
+
+- name: Start firewalld
+  service:
+    name: firewalld
+    state: started
 
 # In case this fails, we want to know NOW.
 # Don't wait for the tasks from X other roles in the same play.
