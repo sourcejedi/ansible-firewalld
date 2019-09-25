@@ -6,20 +6,20 @@ allowed services and ports.
 It supports change over time.  Removing an allowed service or port will
 have the desired effect.
 
-The config is created before `firewalld` is started.  Usually this does
-not matter, because the default zone allows ssh / port 22.  It might be
-useful in case you use a different ssh port.
+We create the requested configuration before `firewalld` is started.
+This means the default configuration from the `firewalld` package is
+not used at any point.  As a result, you can use this role even if you
+have set up Ansible to connect through a non-default port.  Other
+roles might require you to use the default ssh / port 22 connection
+(or to run locally instead), because that port is allowed by the
+default configurations from the `firewalld` package.
 
-For the full set of disclaimers, please read this entire document :-).
+Please read this entire document, so you will know the full set of
+disclaimers :-).
 
-`firewalld` is said to cost 20MB of RAM.  This is for understandable
-reasons, but it is not strictly necessary.
-
-https://github.com/firewalld/firewalld/issues/337#issuecomment-389086797
-
-(I would be interested to hear any alternative, which allows good
+I would be interested to hear any alternative, which allows good
 support for removing ports and for IPv6.  I.e. default rules or macros
-for IPv6, and no strange need to duplicate rules for IPv4 v.s. IPv6).
+for IPv6, and no strange need to duplicate rules for IPv4 v.s. IPv6.
 
 
 ## Requirements
@@ -43,10 +43,63 @@ details, and some `firewall-cmd` queries will show confusing results.
 
 [1] https://unix.stackexchange.com/questions/497697/firewall-cmd-says-no-firewall-zones-are-active-why
 
-It also seems to be missing some error-checking.  Which is not
-specific to Debian or running without NetworkManager.  Seems
-unfortunate to write so much infrastructure and not make it
-fail-fast.
+
+## Status
+
+This README is too long.
+In theory, this role could be extended to work around some of the issues.
+
+### Services that should not be used
+
+To see the list of pre-defined `firewalld` "services", look in
+`/usr/lib/firewalld/services/`.
+
+Do not enable the service "upnp-client", unless you know exactly
+what it does.  This is explained in the link in the uPnP section
+below.  Really, you should be very suspicious about the definition
+of any "-client" service.
+
+Also note that if there is a "helper" with the same name as an
+enabled "service", `firewalld` will automatically enable the
+"helper".  These are the conntrack modules *which parse the relevant
+protocol inside the kernel*.  This is NOT good for your security.
+The "helpers" are defined in `/usr/lib/firewalld/helpers/`.
+
+You could also browse these files in the upstream source tree:
+
+https://github.com/firewalld/firewalld/tree/master/config/
+
+### Breaks uPnP, including uPnP port forwarding
+
+Most Linux firewalls break uPnP, including uPnP port forwarding.
+This includes `firewalld`.  For certain uses of uPnP there are
+simple hacks you can use, but not in other cases.  I note this
+breaks functionality of the Gnome app Transmission.  If NAT-PMP
+port forwarding is available, Transmission will use that instead.
+
+https://unix.stackexchange.com/questions/543612/transmission-gnome-bittorrent-client-v-s-firewall-on-debian-10/
+
+### Lack of error checking
+
+In general, the `firewalld` software seems to be missing some
+error checking or error reporting.  It seems unfortunate to write
+so much infrastructure and not make it fail-fast.
+
+Please carefully test the configurations you apply.  Syntax errors
+may cause a revert to the default zone.  Again, this will probably
+not lock you out, as long as you are connecting using the default
+port for ssh.
+
+You should be able to see if there are any errors by looking in
+the system log, e.g. `systemctl status firewalld`.
+
+
+### Memory usage
+
+`firewalld` is said to cost 20MB of RAM.  This is for understandable
+reasons, but is not strictly necessary.
+
+https://github.com/firewalld/firewalld/issues/337#issuecomment-389086797
 
 
 ## Example playbook
@@ -62,19 +115,6 @@ fail-fast.
           # apt-cacher-ng
           - protocol: tcp
             port: 3142
-
-To see the list of `firewalld` "services", look in
-`/usr/lib/firewalld/services/`.
-
-Note that if there is a "helper" with the same name as an enabled
-"service", `firewalld` will automatically enable the "helper".
-These are the conntrack modules *which parse the relevant protocol
-inside the kernel*.  This is not desirable for a security feature.
-The "helpers" are defined in `/usr/lib/firewalld/helpers/`.
-
-You could also browse these files in the upstream source tree:
-
-https://github.com/firewalld/firewalld/tree/master/config/
 
 
 ## License
