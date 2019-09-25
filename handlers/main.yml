@@ -1,3 +1,9 @@
+# Do not use `systemctl reload`
+# The Debian 9 service file uses `ExecReload=/bin/kill -HUP $MAINPID`.
+# That is sub-optimal.  See the doc for ExecReload= (`man systemd.service`).
+# This way, it will be possible for firewalld to notify us of errors.
+# Although in practice, it doesn't seem to bother anyway.  Ho hum.
+
 - name: Reload firewalld
   listen: firewalld__reload
   command: firewall-cmd --reload
