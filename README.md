@@ -36,12 +36,12 @@ python3 on Fedora 28 and above.
 
 `firewalld` recommends that it be used with NetworkManager.  I do not
 guarantee it will work correctly for you without NetworkManager.
-I use this role [without NetworkManager, on Debian][1].  As far as I
+I use this role without NetworkManager, on Debian.  As far as I
 can tell, the features I rely on *should* work.  However the
 documentation is confusing, `firewalld` code assumes RedHat-specific
 details, and some `firewall-cmd` queries will show confusing results.
 
-[1] https://unix.stackexchange.com/questions/497697/firewall-cmd-says-no-firewall-zones-are-active-why
+https://unix.stackexchange.com/questions/497697/firewall-cmd-says-no-firewall-zones-are-active-why
 
 
 ## Status
