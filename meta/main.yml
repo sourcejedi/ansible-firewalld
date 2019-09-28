@@ -14,8 +14,7 @@ galaxy_info:
         - all
     - name: Debian
       versions:
-        - stretch
-        - buster
+        - all
 
   galaxy_tags:
     - firewall
