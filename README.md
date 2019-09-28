@@ -27,12 +27,10 @@ for IPv6, and no strange need to duplicate rules for IPv4 v.s. IPv6.
 This should work on any distribution that has a package for
 `firewalld`.  It has been tested on Debian and Fedora.
 
-This role happens to *not* require the python bindings for `firewalld`.
-(None of this role could be implemented using the Ansible `firewalld`
-module).  This means that you do not need to force Ansible to use
-python3 on Fedora 28 and above.
-
-(You should probably start using python3 anyway though :-).
+This role happens *not* to require the python bindings for `firewalld`.
+This means that you do not need to force Ansible to use python3 on
+recent systems.  (You should probably start using python3 anyway
+though :-).
 
 `firewalld` recommends that it be used with NetworkManager.  I do not
 guarantee it will work correctly for you without NetworkManager.
@@ -82,8 +80,8 @@ https://unix.stackexchange.com/questions/543612/transmission-gnome-bittorrent-cl
 ### Lack of error checking
 
 In general, the `firewalld` software seems to be missing some
-error checking or error reporting.  It seems unfortunate to write
-so much infrastructure and not make it fail-fast.
+error checking or error reporting.  It seems a little strange to
+write so much infrastructure, and not make it fail-fast.
 
 Please carefully test the configurations you apply.  Syntax errors
 may cause a revert to the default zone.  Again, this will probably
