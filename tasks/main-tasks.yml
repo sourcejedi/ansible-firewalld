@@ -1,5 +1,5 @@
 # Lets create the configuration first...
-# avoid locking ourself out.
+# try to avoid locking ourselves out.
 
 - name: Create firewalld config directories
   file:
@@ -43,10 +43,39 @@
 #    state: stopped
 #    enabled: no
 
+- name: Make a note of the time before starting or reloading firewalld
+  command: 'date "+%Y-%m-%d %H:%M:%S"'
+  register: firewalld__start_time
+  check_mode: off
+  changed_when: False
+
 - name: Install firewalld
   package:
     name: firewalld
     state: present
+
+# doc says not to do this when firewalld is running.
+# doc does not say why.
+# That said, firewalld "watches" the "permanent" config automatically,
+# with a five second interval (?).  So I am also entirely unclear
+# whether this provides any margin of safety, or not.
+#
+# The version in Debian 9 does not support this option
+- name: Check configuration files, if supported
+  command: firewall-offline-cmd --check-config
+  check_mode: no
+  changed_when: False
+  register: firewalld__offline_check
+  failed_when: firewalld__offline_check.rc not in [0, 2]
+
+# The versions of firewalld I tested neglected to warn about some major
+# problems with zone files.
+- name: Check default zone
+  command: firewall-offline-cmd --get-default-zone
+  check_mode: no
+  changed_when: False
+  register: firewalld__offline_zone
+  failed_when: firewalld__offline_zone.stdout != "MyZone"
 
 - name: Enable firewalld
   service:
@@ -60,7 +89,43 @@
 
 # In case this fails, we want to know NOW.
 # Don't wait for the tasks from X other roles in the same play.
-# (It doesn't warn on missing or invalid zone files though.
-#  Maybe we could add a task to ensure/check the default zone)
 - name: Flush handlers (firewalld reload)
   meta: flush_handlers
+
+- name: Check firewalld is in state "running"
+  command: firewall-cmd --state
+  check_mode: no
+  changed_when: False
+
+# Hopefully, this is redundant with firewall-offline-cmd above.
+# But let's try this just in case it helps.
+# I don't have a lot of confidence in firewalld error reporting,
+# e.g. since reload hasn't been reporting errors.
+- name: Ask firewalld to check the configuration, if supported
+  command: firewall-cmd --check-config
+  check_mode: no
+  changed_when: False
+  register: firewalld__online_check
+  failed_when: firewalld__online_check.rc not in [0, 2]
+
+# The versions of firewalld I tested neglected to warn about some major
+# problems with zone files.
+- name: Check default zone
+  command: firewall-cmd --get-default-zone
+  check_mode: no
+  changed_when: False
+  register: firewalld__online_zone
+  failed_when: firewalld__online_zone.stdout != "MyZone"
+
+# Surprise surprise, when you actually start checking for errors, you find them.
+# Specifically, some weird messages about libvirt.
+# Looks similar to the messages in https://access.redhat.com/solutions/2019113
+# except (on Fedora) I see them as warnings instead of errors.
+# So I give up.  It's very likely there are real errors we will not detect
+#
+#- name: Check log for errors or warnings
+  #command: 'journalctl -q -p warning -u firewalld --since "{{ firewalld__start_time.stdout }}"'
+  #when: firewalld__check_errors
+  #register: firewalld__errors
+  #failed_when: firewalld__errors.stdout != "" or firewalld__errors.stderr != "" or firewalld__errors.rc != 0
+  #changed_when: False

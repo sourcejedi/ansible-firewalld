@@ -27,11 +27,6 @@ for IPv6, and no strange need to duplicate rules for IPv4 v.s. IPv6.
 This should work on any distribution that has a package for
 `firewalld`.  It has been tested on Debian and Fedora.
 
-This role happens *not* to require the python bindings for `firewalld`.
-This means that you do not need to force Ansible to use python3 on
-recent systems.  (You should probably start using python3 anyway
-though :-).
-
 `firewalld` recommends that it be used with NetworkManager.  I do not
 guarantee it will work correctly for you without NetworkManager.
 I use this role without NetworkManager, on Debian.  As far as I
@@ -41,6 +36,14 @@ details, and some `firewall-cmd` queries will show confusing results.
 
 https://unix.stackexchange.com/questions/497697/firewall-cmd-says-no-firewall-zones-are-active-why
 
+If you run a firewall inside a container like `systemd-nspawn`,
+it might not be able to load the conntrack kernel modules it needs.
+This issue might be particularly prominent during the transition
+from iptables to nftables.
+
+This role happens *not* to require the python bindings for `firewalld`.
+This means that you do not need to force Ansible to use python3 on
+recent systems.  (You should use python3 anyway though :-).
 
 ## Status
 
@@ -77,27 +80,30 @@ port forwarding is available, Transmission will use that instead.
 
 https://unix.stackexchange.com/questions/543612/transmission-gnome-bittorrent-client-v-s-firewall-on-debian-10/
 
-### Lack of error checking
+### Error checking might not work as expected
+
+Please carefully test the configurations you apply.  An error in the
+role could cause a revert to the default zone.  This would probably
+not lock you out, as long as you are connecting using the default port
+for ssh.
+
+This role includes some checks e.g. that the service names you specify
+are valid, although this does not work on older versions of firewalld.
+Ideally you would also check for errors by by looking in the system
+log, e.g. `systemctl status firewalld`.  You might see warnings about
+iptables --delete commands, particularly regarding "LIBVIRT" - this
+seems to be normal.
 
 In general, the `firewalld` software seems to be missing some
 error checking or error reporting.  It seems a little strange to
 write so much infrastructure, and not make it fail-fast.
 
-Please carefully test the configurations you apply.  Syntax errors
-may cause a revert to the default zone.  Again, this will probably
-not lock you out, as long as you are connecting using the default
-port for ssh.
-
-You should be able to see if there are any errors by looking in
-the system log, e.g. `systemctl status firewalld`.
-
 
 ### Memory usage
 
 `firewalld` is said to cost 20MB of RAM.  This is for understandable
-reasons, but is not strictly necessary.
-
-https://github.com/firewalld/firewalld/issues/337#issuecomment-389086797
+reasons, but does not seem to be strictly necessary.  (See
+[issue 337](https://github.com/firewalld/firewalld/issues/337#issuecomment-389086797))
 
 
 ## Example playbook
