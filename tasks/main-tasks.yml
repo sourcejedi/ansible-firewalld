@@ -48,6 +48,7 @@
   register: firewalld__start_time
   check_mode: off
   changed_when: False
+  when: firewalld__check_errors
 
 - name: Install firewalld
   package:
@@ -121,11 +122,11 @@
 # Specifically, some weird messages about libvirt.
 # Looks similar to the messages in https://access.redhat.com/solutions/2019113
 # except (on Fedora) I see them as warnings instead of errors.
-# So I give up.  It's very likely there are real errors we will not detect
+# Maybe fixed on Fedora since early 2020.
 #
-#- name: Check log for errors or warnings
-  #command: 'journalctl -q -p warning -u firewalld --since "{{ firewalld__start_time.stdout }}"'
-  #when: firewalld__check_errors
-  #register: firewalld__errors
-  #failed_when: firewalld__errors.stdout != "" or firewalld__errors.stderr != "" or firewalld__errors.rc != 0
-  #changed_when: False
+- name: Check log for errors or warnings
+  command: 'journalctl -q -p warning -u firewalld --since "{{ firewalld__start_time.stdout }}"'
+  when: firewalld__check_errors
+  register: firewalld__errors
+  failed_when: firewalld__errors.stdout != "" or firewalld__errors.stderr != "" or firewalld__errors.rc != 0
+  changed_when: False
