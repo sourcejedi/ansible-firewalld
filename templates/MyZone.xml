@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<zone><!-- default is target="%%REJECT%%" -->
+
+<!--
+firewalld defaults to <zone target="%%REJECT%%">.
+
+The argument for using target="DROP" (and also drop ICMP echo) is to
+slow down network reconnaisance, if your organisation is targeted by a
+skilled attacker.
+
+For my usage:
+1. This argument is not a priority.
+2. It is useful to run "ping".
+
+I discount arguments such as Gibson's that this was useful for personal
+dialup connections.  Either the attacker has an exploit that works on
+one of your open ports, or they don't.
+
+I will consider pull requests if the implementation is clearly
+justified in comments, and the README text adds minimal overhead.
+
+("Enable this option if your organization's policy requires dropping
+ICMP ping probes, and probes of firewalled ports, without a response.
+If you are not sure, leave it disabled.  You could need to use such
+probes for troubleshooting, or to prevent IP address conflicts (ping
+from DHCP server), or for certain protocols (IPv6 Teredo?).
+Responding to probes of firewalled ports can also avoid waiting for a
+long timeout.)
+-->
+<zone>
   <short>My Zone</short>
   <description>This firewalld installation is managed by a scripted process. Manual changes will be destroyed if the script is re-applied.</description>
 
