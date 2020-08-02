@@ -32,7 +32,8 @@ guarantee it will work correctly for you without NetworkManager.
 I use this role without NetworkManager, on Debian.  As far as I
 can tell, the features I rely on *should* work.  However the
 documentation is confusing, `firewalld` code assumes RedHat-specific
-details, and some `firewall-cmd` queries will show confusing results.
+details, and some `firewall-cmd` queries will show
+confusing results:
 
 https://unix.stackexchange.com/questions/497697/firewall-cmd-says-no-firewall-zones-are-active-why
 
@@ -57,8 +58,8 @@ To see the list of pre-defined `firewalld` "services", look in
 
 Do not enable the service "upnp-client", unless you know exactly
 what it does.  This is explained in the link in the uPnP section
-below.  Really, you should be very suspicious about the definition
-of any "-client" service.
+below.  In general, you should be very suspicious about the
+definition of any "-client" service.
 
 Also note that if there is a "helper" with the same name as an
 enabled "service", `firewalld` will automatically enable the
@@ -74,9 +75,9 @@ https://github.com/firewalld/firewalld/tree/master/config/
 
 Most Linux firewalls break uPnP, including uPnP port forwarding.
 This includes `firewalld`.  For certain uses of uPnP there are
-simple hacks you can use, but not in other cases.  I note this
-breaks functionality of the Gnome app Transmission.  If NAT-PMP
-port forwarding is available, Transmission will use that instead.
+simple hacks you can use, but not in other cases.  I notice this
+breaks functionality of Transmission.  If NAT-PMP port forwarding
+is available, Transmission will use that instead.
 
 https://unix.stackexchange.com/questions/543612/transmission-gnome-bittorrent-client-v-s-firewall-on-debian-10/
 
