@@ -81,6 +81,17 @@ is available, Transmission will use that instead.
 
 https://unix.stackexchange.com/questions/543612/transmission-gnome-bittorrent-client-v-s-firewall-on-debian-10/
 
+### Interaction with libvirt virtual machines
+
+Recent versions of firewalld apply effectively apply a different set
+of rules to virtual machines ("libvirt zone").  In general, this
+prevents them from connecting to the host machine.  Which is probably
+fine for most uses.  However, if you have been connecting to VMs using
+MDNS (`my-virtual-machine.local`), that will no longer work.  This
+can easily be adjusted or worked around:
+
+https://unix.stackexchange.com/questions/602512/how-to-connect-to-libvirt-vms-by-name-instead-of-ip-address/602513
+
 ### Error checking might not work as expected
 
 Please carefully test the configurations you apply.  An error in the
