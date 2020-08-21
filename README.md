@@ -83,14 +83,15 @@ https://unix.stackexchange.com/questions/543612/transmission-gnome-bittorrent-cl
 
 ### Interaction with libvirt virtual machines
 
-Recent versions of firewalld apply effectively apply a different set
-of rules to virtual machines ("libvirt zone").  In general, this
-prevents them from connecting to the host machine.  Which is probably
-fine for most uses.  However, if you have been connecting to VMs using
-MDNS (`my-virtual-machine.local`), that will no longer work.  This
-can easily be adjusted or worked around:
+In recent versions of firewalld, your virtual machines are subject to
+a different set of rules ("libvirt zone").  In general, this prevents
+them connecting to the host machine.  This is probably fine for most
+uses.  However, if you have been connecting to VMs using MDNS
+(`ssh my-virtual-machine.local`), that will no longer work.  This
+can easily be worked around, or adjusted.  See:
 
-https://unix.stackexchange.com/questions/602512/how-to-connect-to-libvirt-vms-by-name-instead-of-ip-address/602513
+* [sourcejedi.libvirt_nss](https://github.com/sourcejedi/ansible-libvirt_nss)
+* https://unix.stackexchange.com/questions/602512/how-to-connect-to-libvirt-vms-by-name-instead-of-ip-address/602513
 
 ### Error checking might not work as expected
 
