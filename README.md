@@ -101,11 +101,11 @@ not lock you out, as long as you are connecting using the default port
 for ssh.
 
 This role includes some checks e.g. that the service names you specify
-are valid, although this does not work on older versions of firewalld.
+are valid, although this does not work on old versions of firewalld.
 Ideally you would also check for errors by by looking in the system
-log, e.g. `systemctl status firewalld`.  You might see warnings about
-iptables --delete commands, particularly regarding "LIBVIRT" - this
-seems to be normal.
+log, e.g. `systemctl status firewalld`.  On old systems, you might
+also see warnings about iptables --delete commands, particularly
+regarding "LIBVIRT" - this seems to be normal.
 
 In general, the `firewalld` software seems to be missing some
 error checking or error reporting.  It seems a little strange to
