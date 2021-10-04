@@ -46,7 +46,7 @@
 - name: Make a note of the time before starting or reloading firewalld
   command: 'date "+%Y-%m-%d %H:%M:%S"'
   register: firewalld__start_time
-  check_mode: off
+  check_mode: no
   changed_when: False
   when: firewalld__check_errors
 
