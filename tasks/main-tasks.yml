@@ -124,8 +124,9 @@
 # except (on Fedora) I see them as warnings instead of errors.
 # Maybe fixed on Fedora since early 2020.
 #
-- name: Check log for errors or warnings
+- name: Check for errors or warnings when new config was loaded
   command: 'journalctl -q -p warning -u firewalld --since "{{ firewalld__start_time.stdout }}"'
+  check_mode: no
   when: firewalld__check_errors
   register: firewalld__errors
   failed_when: firewalld__errors.stdout != "" or firewalld__errors.stderr != "" or firewalld__errors.rc != 0
