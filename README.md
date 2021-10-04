@@ -17,10 +17,6 @@ default configurations from the `firewalld` package.
 Please read this entire document, so you will know the full set of
 disclaimers :-).
 
-I would be interested to hear any alternative, which allows good
-support for removing ports and for IPv6.  I.e. default rules or macros
-for IPv6, and no strange need to duplicate rules for IPv4 v.s. IPv6.
-
 
 ## Requirements
 
@@ -29,7 +25,7 @@ This should work on any distribution that has a package for
 
 `firewalld` recommends that it be used with NetworkManager.  I do not
 guarantee it will work correctly for you without NetworkManager.
-I use this role without NetworkManager, on Debian.  As far as I
+I have used this role without NetworkManager, on Debian.  As far as I
 can tell, the features I rely on *should* work.  However the
 documentation is confusing, `firewalld` code assumes RedHat-specific
 details, and some `firewall-cmd` queries will show
@@ -48,8 +44,7 @@ recent systems.  (You should use python3 anyway though :-).
 
 ## Status
 
-This README is too long.
-In theory, this role could be extended to work around some of the issues.
+This document is too long.
 
 ### Services that should not be used
 
